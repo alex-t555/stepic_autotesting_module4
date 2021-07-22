@@ -2,6 +2,8 @@
 """
 
 from selenium.webdriver.chrome.webdriver import WebDriver
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.common.exceptions import TimeoutException
 
 class BasePage():
 
@@ -11,3 +13,12 @@ class BasePage():
     
     def open(self):
         self.browser.get(self.url)
+
+    def is_element_present(self, how: str, what: str, timeout: int=4) -> bool:
+        try:
+            WebDriverWait(driver=self.browser, timeout=timeout).until(
+                lambda d: d.find_element(how, what)
+            )
+        except TimeoutException:
+            return False
+        return True
