@@ -1,9 +1,6 @@
 """ test_product_page.py
 """
 
-from inspect import ArgInfo
-from _pytest.mark import param
-from _pytest.outcomes import xfail
 import pytest
 from selenium.webdriver.chrome.webdriver import WebDriver
 
@@ -30,3 +27,28 @@ def test_guest_can_add_product_to_basket(browser: WebDriver, link: str) -> None:
     page = ProductPage(browser=browser, url=link)
     page.open()
     page.add_product_to_basket()
+
+
+@pytest.mark.parametrize('link', links)
+@pytest.mark.xfail
+def test_guest_cant_see_success_message_after_adding_product_to_basket(browser: WebDriver, link: str) -> None:
+    page = ProductPage(browser=browser, url=link)
+    page.open()
+    page.add_product_to_basket()
+    page.should_not_be_success_message()
+
+
+@pytest.mark.parametrize('link', links)
+def test_guest_cant_see_success_message(browser: WebDriver, link: str) -> None:
+    page = ProductPage(browser=browser, url=link)
+    page.open()
+    page.should_not_be_success_message()
+
+
+@pytest.mark.parametrize('link', links)
+@pytest.mark.xfail
+def test_message_disappeared_after_adding_product_to_basket(browser: WebDriver, link: str) -> None:
+    page = ProductPage(browser=browser, url=link)
+    page.open()
+    page.add_product_to_basket()
+    page.should_disappeared_success_message()
